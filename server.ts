@@ -114,10 +114,11 @@ Génère obligatoirement le format JSON structuré demandé.`;
 
     // High availability models first to avoid 429 quota traps or 503 demand spikes on the free tier
     const baseModels = [
-      "gemini-3.1-flash-lite", // Extremely stable, ultra-fast, high free-tier quotas (1500/day vs 20 for 3.5-flash)
-      "gemini-flash-latest",   // High base rate-limits, very stable
-      "gemini-3.5-flash",      // Fallback model if the lite models are busy
-      "gemini-3.1-pro-preview" // Paid tier fallback model
+      "gemini-3.1-flash-lite",
+      "gemini-1.5-flash",
+      "gemini-flash-latest",
+      "gemini-3.5-flash",
+      "gemini-3.1-pro-preview"
     ];
 
     // Priority-sort base models dynamic skip-list to instantly ignore exhausted models
@@ -265,7 +266,7 @@ Génère obligatoirement le format JSON structuré demandé.`;
 let openaiClient: OpenAI | null = null;
 const getOpenAIClient = () => {
   const apiKey = process.env.IMAGE_API_KEY;
-  if (!apiKey || apiKey.trim().length === 0) {
+  if (!apiKey || apiKey.trim().length === 0 || apiKey.startsWith("AIza")) {
     return null;
   }
   if (!openaiClient) {
@@ -309,12 +310,12 @@ Requirements:
     // Try OpenAI API Route first if key is present
     const openAI = getOpenAIClient();
     if (openAI) {
-      console.log(`[OpenAI API] Lancement de gpt-image-1 pour "${title || 'image'}"`);
+      console.log(`[OpenAI API] Lancement de dall-e-3 pour "${title || 'image'}"`);
       try {
         const response = await openAI.images.generate({
-          model: "gpt-image-1",
+          model: "dall-e-3",
           prompt: targetPrompt,
-          size: "1536x1024"
+          size: "1024x1024"
         });
 
         const imgUrl = response.data[0]?.url;
@@ -328,7 +329,7 @@ Requirements:
           }
         }
       } catch (openaiErr: any) {
-        console.warn(`[OpenAI API Info] Le modèle 'gpt-image-1' ou la clé de l'utilisateur n'est pas actif/supporté (${openaiErr.message || openaiErr}). Tentative avec dall-e-2...`);
+        console.warn(`[OpenAI API Info] Le modèle 'dall-e-3' ou la clé de l'utilisateur n'est pas actif/supporté (${openaiErr.message || openaiErr}). Tentative avec dall-e-2...`);
         try {
           const response = await openAI.images.generate({
             model: "dall-e-2",
@@ -360,7 +361,7 @@ Requirements:
       console.log(`[Gemini API] Essai de secours avec Imagen 4.0 Fast pour le prompt: "${targetPrompt.substring(0, 80)}..."`);
       try {
         const response = await ai.models.generateImages({
-          model: "imagen-4.0-fast-generate-001",
+          model: "imagen-4.0-generate-001",
           prompt: targetPrompt,
           config: {
             numberOfImages: 1,

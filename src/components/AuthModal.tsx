@@ -120,7 +120,7 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose, onSuccess
       let userMessage = t("error_auth_failed");
       if (err.code === "auth/email-already-in-use") {
         userMessage = "Cet email est déjà utilisé. Essayez de vous connecter ou utilisez une autre adresse.";
-      } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password") {
+      } else if (err.code === "auth/user-not-found" || err.code === "auth/wrong-password" || err.code === "auth/invalid-credential") {
         userMessage = "Email ou mot de passe incorrect.";
       } else if (err.code === "auth/invalid-email") {
         userMessage = "Format d'email invalide.";
