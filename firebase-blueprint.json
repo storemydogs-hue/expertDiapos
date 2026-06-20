@@ -1,0 +1,9 @@
+{
+  "collections": {
+    "users": {
+        "name": "string",
+        "email": "string",
+        "createdAt": "timestamp"
+    }
+  }
+}

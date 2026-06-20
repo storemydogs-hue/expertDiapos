@@ -1,0 +1,6 @@
+{
+  "name": "Expert Diapos",
+  "description": "Générez des présentations PowerPoint professionnelles et structurées de 15 à 20 slides à partir de vos textes et documents à l'aide de l'IA.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
